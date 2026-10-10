@@ -35,13 +35,13 @@ jobs:
           sudo install -m755 lintcrux /usr/local/bin/lintcrux
           lintcrux --version
 
-      # Fail only on findings the committed baseline (rtl/.lintcrux-baseline.json)
+      # Fail only on findings the committed baseline (.lintcrux-baseline.json)
       # does not contain, so the existing ones don't block the build.
       - name: Lint
         id: lint
         run: |
           set +e
-          lintcrux rtl/soc_alu.lintcrux \
+          lintcrux soc_alu.lintcrux \
             --engine verilator \
             --fail-on-new-violations \
             --export sarif --out lint.sarif
