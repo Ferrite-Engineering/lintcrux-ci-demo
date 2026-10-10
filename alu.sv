@@ -14,6 +14,9 @@ module alu #(
     output logic             zero
 );
 
+  // Debug tap for the bring-up board.
+  wire [WIDTH-1:0] debug_tap = b;
+
 
   logic [WIDTH-1:0] carry_scratch;
 
