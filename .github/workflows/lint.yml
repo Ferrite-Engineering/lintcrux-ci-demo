@@ -1,0 +1,68 @@
+name: lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+  security-events: write # upload SARIF to code scanning
+
+jobs:
+  rtl-lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      # Homebrew, not apt: the committed baseline matches findings partly by
+      # message text, so CI runs the same Verilator release it was set with.
+      - name: Install Verilator
+        run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          brew install verilator
+          echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
+          verilator --version
+
+      - name: Install LintCrux
+        env:
+          LINTCRUX_VERSION: '1.0.0'
+        run: |
+          curl -fsSL -o lintcrux-cli.tar.gz \
+            "https://updates.lintcrux.app/${LINTCRUX_VERSION}/lintcrux-cli-${LINTCRUX_VERSION}-linux-x64.tar.gz"
+          tar -xzf lintcrux-cli.tar.gz
+          sudo install -m755 lintcrux /usr/local/bin/lintcrux
+          lintcrux --version
+
+      # Fail only on findings the committed baseline (rtl/.lintcrux-baseline.json)
+      # does not contain, so the existing ones don't block the build.
+      - name: Lint
+        id: lint
+        run: |
+          set +e
+          lintcrux rtl/soc_alu.lintcrux \
+            --engine verilator \
+            --fail-on-new-violations \
+            --export sarif --out lint.sarif
+          code=$?
+          set -e
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+
+      - name: Upload SARIF to code scanning
+        if: always() && hashFiles('lint.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: lint.sarif
+          category: lintcrux
+
+      - name: Gate
+        if: always()
+        run: |
+          code="${{ steps.lint.outputs.code }}"
+          case "$code" in
+            0) echo "::notice::No findings beyond the baseline." ;;
+            2) echo "::error::This change introduces new lint findings."; exit 1 ;;
+            3) echo "::error::LintCrux could not run - check the engine setup."; exit 1 ;;
+            *) echo "::error::LintCrux exited $code."; exit 1 ;;
+          esac

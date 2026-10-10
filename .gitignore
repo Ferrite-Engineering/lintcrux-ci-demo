@@ -1,0 +1,5 @@
+# LintCrux local state
+.lintcrux/
+# Build output from CI
+lint.sarif
+lintcrux-cli.tar.gz

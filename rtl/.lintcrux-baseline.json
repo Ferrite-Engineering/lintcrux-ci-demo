@@ -1,0 +1,57 @@
+{
+  "version": 2,
+  "baselineId": "baseline-1791656676142",
+  "createdAt": "2026-10-10T18:24:36.142394Z",
+  "projectPath": ".",
+  "frozenViolations": [
+    {
+      "fingerprint": "f4dfcec7f47a6d9a",
+      "ruleId": "verible/explicit-parameter-storage-type",
+      "filePath": "alu.sv",
+      "line": 11,
+      "message": "Explicitly define a storage type for every parameter and localparam, (WIDTH)."
+    },
+    {
+      "fingerprint": "9ace3d2a80973f6a",
+      "ruleId": "verible/case-missing-default",
+      "filePath": "alu.sv",
+      "line": 36,
+      "message": "Explicitly define a default case for every case statement or add `unique` qualifier to the case statement."
+    },
+    {
+      "fingerprint": "25865dd26b32508d",
+      "ruleId": "verilator/WIDTHTRUNC",
+      "filePath": "alu.sv",
+      "line": 58,
+      "message": "Operator ASSIGNW expects 4 bits on the Assign RHS, but Assign RHS's VARREF 'a' generates 8 bits."
+    },
+    {
+      "fingerprint": "c4328aaa03cac84b",
+      "ruleId": "verilator/UNUSEDSIGNAL",
+      "filePath": "alu.sv",
+      "line": 24,
+      "message": "Signal is not used: 'carry_scratch'"
+    },
+    {
+      "fingerprint": "c1816a0204c90c2a",
+      "ruleId": "verilator/UNDRIVEN",
+      "filePath": "alu.sv",
+      "line": 27,
+      "message": "Signal is not driven: 'overflow_flag'"
+    },
+    {
+      "fingerprint": "8cd5ec860d409224",
+      "ruleId": "verilator/CASEINCOMPLETE",
+      "filePath": "alu.sv",
+      "line": 36,
+      "message": "Case values incompletely covered (example pattern 0x5)"
+    },
+    {
+      "fingerprint": "e0b3df513d4657d5",
+      "ruleId": "verilator/LATCH",
+      "filePath": "alu.sv",
+      "line": 35,
+      "message": "Latch inferred for signal 'alu.next_result' (not all control paths of combinational always assign a value)"
+    }
+  ]
+}

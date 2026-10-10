@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "name": "soc_alu",
+  "rootPath": ".",
+  "language": "systemverilog",
+  "sourceFiles": ["alu.sv"],
+  "enabledEngineIds": ["verilator", "verible"],
+  "severityOverrides": {
+    "verilator/LATCH": "error",
+    "verilator/CASEINCOMPLETE": "error"
+  }
+}
